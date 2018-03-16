@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import sa_retiming.SAretimer;
 import scheduler.ALAP;
 import scheduler.ASAP;
 import scheduler.Dot_reader;
@@ -14,57 +15,43 @@ import scheduler.Scheduler;
 
 public class Main {
 
-	public static void main(String[] args) {
-		RC rc = null;
-		if (args.length > 1) {
-			System.out.println("Reading resource constraints from " + args[1] + "\n");
-			rc = new RC();
-			rc.parse(args[1]);
-		}
-		int quality = 1;
-		if (args.length > 2) {
-			try {
-				quality = Integer.parseInt(args[2]);
-				if (quality < 1 || quality > 10)
-					throw new NumberFormatException();
-			} catch (NumberFormatException x) {
-				System.err.println("Argument quality must be an integer value between 1 and 10");
-				System.exit(-1);
-			}
-		}
-
-		Dot_reader dr = new Dot_reader(false);
-		if (args.length < 1) {
-			System.err.printf("Usage: scheduler dotfile resource_constraints [quality (1-10)]%n");
-			System.exit(-1);
-		} else {
-			System.out.println("Scheduling " + args[0]);
-			System.out.println();
-		}
-		Graph g = dr.parse(args[0]);
-		double asapCost, alapCost, sasdcCost;
-
-		int i = args[0].lastIndexOf("/");
-		if (i == -1) // fck windwos
-			i = args[0].lastIndexOf("\\");
-		String fn = args[0].substring(i + 1);
-
-		Scheduler s = new ASAP();
-		Schedule sched = s.schedule(g);
-		System.out.printf("Cost (ASAP) = %s%n", asapCost = sched.cost());
-		sched.draw("schedules/ASAP_" + fn);
-
-		s = new ALAP();
-		sched = s.schedule(g);
-		System.out.printf("Cost (ALAP) = %s%n", alapCost = sched.cost());
-		sched.draw("schedules/ALAP_" + fn);
+  public static void main(String[] args) {
+    // read dot file
+    Graph g = null;
+    if (args.length > 0) {
+      Dot_reader dr = new Dot_reader(true);
+      g = dr.parse(args[0]);
+    } else throw new IllegalArgumentException("No input graph given!");
+    
+    // read resource constraints
+    RC constraints = null;
+    if (args.length > 1) {
+      constraints = new RC();
+      constraints.parse(args[1]);
+    } else throw new IllegalArgumentException("No resource constraints given!");
+    
+    // read SA-quality
+    int quality = 0;
+    if (args.length > 2) {
+      quality = Integer.parseInt(args[2]);
+    } else throw new IllegalArgumentException("No quality value given!");
+    
+    SAretimer retimer = new SAretimer(g);
+    
+    retimer.retime();
+    Scheduler scheduler = new ASAP();
+    Schedule sched = scheduler.schedule(g);
+    
+    sched.draw("out.dot");
+    
+    
 
 	/*	SASDC sasdc = new SASDC(rc, quality);
 		sched = sasdc.schedule(g);
 		System.out.printf("Cost (SA/SDC) = %s%n", sasdcCost = sched.cost());
 		sched.draw("schedules/SASDC_" + fn);*/
 
-		File file = new File("benchmark.csv");
+	/*	File file = new File("benchmark.csv");
 		try {
 			boolean heading = !file.exists();
 			FileWriter wtr = new FileWriter("benchmark.csv", true);
@@ -74,6 +61,6 @@ public class Main {
 			wtr.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 }

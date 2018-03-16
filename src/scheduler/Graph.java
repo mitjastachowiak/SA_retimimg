@@ -8,6 +8,7 @@ import java.util.Formatter;
 
 public class Graph implements Iterable<Node> {
 	private HashMap<Node, Node> nodes;
+	public boolean tmp1Used = false; // manage access to node's tmp1-property
 		
 	public Graph() {
 		nodes = new HashMap<Node, Node>();
@@ -25,12 +26,13 @@ public class Graph implements Iterable<Node> {
 	 * Links two nodes to each other for top-down linking.
 	 * @param pred preceding node
 	 * @param successing node
+	 * @param weight of new link
 	 * @return returns the SUCC if everything went fine, NULL otherwise
 	 */
-	public Node link(Node pred, Node succ, int it) {
+	public Node link(Node pred, Node succ, int w) {
 		pred = add(pred);
 		succ = add(succ);
-		return succ.prepend(pred.append(succ, it), it);
+		return succ.prepend(pred, w);
 	}
 	
 	public int size() {
@@ -41,12 +43,13 @@ public class Graph implements Iterable<Node> {
 	 * Links two nodes to each other for bottom-up linking.
 	 * @param pred preceding node
 	 * @param successing node
+	 * @param weight of new link
 	 * @return returns the PRED if everything went fine, NULL otherwise
 	 */
-	public Node rlink(Node pred, Node succ, int it) {
+	public Node rlink(Node pred, Node succ, int w) {
 		pred = add(pred);
 		succ = add(succ);
-		return pred.append(succ.prepend(pred, it), it);
+		return pred.append(succ, w);
 	}
 		
 	public Node get(Node nd) {
@@ -59,7 +62,6 @@ public class Graph implements Iterable<Node> {
 	
 	public void unlink(Node a, Node b) {
 		a.remove(b);
-		b.remove(a);
 	}
 	
 	public void handle(Node a, Node b) {
