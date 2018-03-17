@@ -9,9 +9,17 @@ import java.util.Map.Entry;
 import scheduler.Graph;
 import scheduler.Node;
 
+/**
+ * This class contains basic operations required for retiming of nodes in a graph.
+ * @author Mitja Stachowiak, Ludwig Meysel
+ */
 public abstract class Retimer {
   protected final Graph graph;
   private final ArrayList<Node> topologicalSort;
+  private static class TopologicalComparator implements Comparator<Node> {
+    @Override
+    public int compare(Node o1, Node o2) { return o1.getDepth() - o2.getDepth(); }
+  }
   private final TopologicalComparator topologicalComp = new TopologicalComparator();
   
   public Retimer (Graph graph) {
@@ -53,16 +61,8 @@ public abstract class Retimer {
   
   /**
    * Processes a retiming on the graph, that was given to this retimer in the constructor
+   * @return
+   * returns an array of three integers, holding the start and the end cost and the number of needed cycles.
    */
-  public abstract void retime ();
-  
-  
-  
-  
-  private static class TopologicalComparator implements Comparator<Node> {
-    @Override
-    public int compare(Node o1, Node o2) {
-      return o1.getDepth() - o2.getDepth();
-    }
-  }
+  public abstract int[] retime (int quality);
 }

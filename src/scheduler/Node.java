@@ -8,6 +8,7 @@ import java.util.Formatter;
 
 /**
  * This class represents a single node.
+ * The ability to auto-update the depth-value was added by Mitja Stachowiak.
  */
 public class Node {
   private HashSet<Node> unhandled_succ; // set of successors, which have not been handled by this node
