@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FilenameFilter;
 
-import sa_retiming.SAretimer;
+import retiming.SAretimer;
 import scheduler.Dot_reader;
 import scheduler.Graph;
 import scheduler.ListScheduler;
@@ -46,7 +46,7 @@ public class Main {
     if (args.length > 4 && args[4].equalsIgnoreCase("scheduleascost")) scheduleAsCost = true;
     
     // process files
-    System.out.println("before\tafter\tsched\tcycles\tfile name");
+    System.out.println("nodes\tbefore\tafter\tsched\tcycles\tfile name");
     System.out.println("-------------------------------------------");
     for (int i = 0; i < inFiles.length; i++) processFile(inFiles[i], outputDir, constraints, quality, scheduleAsCost);
   }
@@ -72,6 +72,6 @@ public class Main {
     else sched.draw(outDir.getAbsolutePath() + "/" + inFile.getName());
     
     // print information
-    if (sched != null) System.out.println(cost[0] + "\t" + cost[1] + "\t" + sched.max() + "\t" + cost[2] + "\t" + inFile.getName());
+    if (sched != null) System.out.println(g.size() + "\t" + cost[0] + "\t" + cost[1] + "\t" + sched.max() + "\t" + cost[2] + "\t" + inFile.getName());
   }
 }

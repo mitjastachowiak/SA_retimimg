@@ -1,4 +1,4 @@
-package sa_retiming;
+package retiming;
 
 import java.util.ArrayList;
 import java.util.Comparator;

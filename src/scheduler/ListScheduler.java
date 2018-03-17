@@ -114,7 +114,10 @@ public class ListScheduler extends Scheduler {
           break;
         }
       }
-      if (nResFree == resNames.length && nOpPlaned == 0) return null; // cannot plan any operation. Maybe there is one resource type missing...
+      if (nResFree == resNames.length && nOpPlaned == 0) {
+        g.tmp1Used = false;
+        return null; // cannot plan any operation. Maybe there is one resource type missing...
+      }
       t++;
     }
     g.tmp1Used = false;
