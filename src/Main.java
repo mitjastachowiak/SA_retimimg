@@ -50,8 +50,8 @@ public class Main {
     System.out.println("-------------------------------------------");
     for (int i = 0; i < inFiles.length; i++) processFile(inFiles[i], outputDir, constraints, quality, scheduleAsCost);
   }
-  
-  
+
+
   private static void processFile (File inFile, File outDir, RC constraints, int quality, boolean scheduleAsCost) {
     // read dot file
     Dot_reader dr = new Dot_reader(true);

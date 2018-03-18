@@ -19,7 +19,7 @@ public class SAretimer extends Retimer {
   private final ArrayList<Node> randomSort;
   private int randomRepeats = 0; // increased whenever one randomSort is completely processed
   private int randomPos = 0;
-  private final float dirChangeInterval = 2f;
+  public float dirChangeInterval = 5f;
   public Scheduler scheduler = null; // if this value is set, the real length of the schedule is used as the cost-function
   
   public SAretimer (Graph graph) {
@@ -135,7 +135,7 @@ public class SAretimer extends Retimer {
     int nCycles = 0;
     int startC = C;
     double T = C / 0.693147; // Init Temp: Accept a double of cost with 50% probability
-    while (T > 0.1) {
+    if (quality > 0) while (T > 0.1) {
       int nAccepted = 0;
       randomPos = randomSort.size(); // start with value > size, so that the randomRepeats is increased and mix() is called in first call of findRotatableNode
       randomRepeats = -1;
